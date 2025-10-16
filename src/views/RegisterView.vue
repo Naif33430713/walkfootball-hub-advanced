@@ -184,7 +184,7 @@ function validate() {
   if (!phone) errors.value.phone = 'Phone is required.'
   if (!form.value.terms) errors.value.terms = 'You must agree to the terms.'
 
-  // return true if any error exists (so caller can early return)
+
   return Object.values(errors.value).some(Boolean)
 }
 
@@ -199,7 +199,7 @@ async function handleRegister() {
     const password = form.value.password.trim()
 
     const cred = await createUserWithEmailAndPassword(auth, email, password)
-    // set displayName to username (nice to have)
+
     const name = form.value.username.trim()
     if (name) {
       await updateProfile(cred.user, { displayName: name }).catch(() => {})

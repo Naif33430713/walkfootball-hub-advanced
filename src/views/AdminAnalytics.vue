@@ -8,7 +8,7 @@
       </button>
     </div>
 
-    <!-- live updates for drilldown -->
+
     <div id="analytics-status"
          class="visually-hidden"
          role="status"
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <!-- Drilldown: Programs in selected location -->
+
     <div v-if="selectedLocation" class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Programs in: {{ selectedLocation }}</strong>
@@ -75,7 +75,7 @@
       </div>
     </div>
 
-    <!-- Drilldown: Ratings with selected stars -->
+
     <div v-if="selectedStars" class="card mt-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Ratings with ★{{ selectedStars }}</strong>
@@ -126,13 +126,13 @@ const c2 = ref(null)
 let chart1 = null
 let chart2 = null
 
-// raw data (kept so drilldown can filter)
+
 const programsAll = ref([])
 const ratingsAll = ref([])
 
-// drilldown selections
-const selectedLocation = ref(null)   // string
-const selectedStars = ref(null)      // 1..5
+
+const selectedLocation = ref(null)
+const selectedStars = ref(null)
 
 function updateStatus(msg) {
   statusMsg.value = msg
@@ -201,13 +201,13 @@ async function fetchData() {
       },
       options: {
         responsive: true,
-        animation: false, // no animation
+        animation: false,
         onClick: (_e, els) => {
           if (!els.length) return
           const i = els[0].index
           selectedLocation.value = locLabels[i]
           announce(`Filtered by ${selectedLocation.value} (${locValues[i]} program(s))`)
-          // ensure panel is visible in viewport on small screens
+
           nextTick(() => window.scrollBy({ top: 240, behavior: 'smooth' }))
         },
         scales: { y: { beginAtZero: true } },
@@ -232,7 +232,7 @@ async function fetchData() {
       },
       options: {
         responsive: true,
-        animation: false, // no animation
+        animation: false,
         plugins: { legend: { position: 'bottom' } },
         onClick: (_e, els) => {
           if (!els.length) return
@@ -246,7 +246,7 @@ async function fetchData() {
 
     lastUpdated.value = Date.now()
     updateStatus('Analytics updated.')
-    focusMain()  // move focus to main content area
+    focusMain()
 
 
   } finally {

@@ -27,6 +27,9 @@
           <span v-if="saving">Saving…</span>
           <span v-else>Save</span>
         </button>
+        <p v-if="saveMessage" class="d-inline-block mb-0" :class="saving ? 'text-muted' : 'text-success'">
+          {{ saveMessage }}
+        </p>
       </div>
     </div>
     <div v-else class="alert alert-info">
@@ -83,12 +86,13 @@ const user = ref(null);
 const stars = ref(0);
 const comment = ref("");
 const saving = ref(false);
+const saveMessage = ref("")
 
 // load auth
 onMounted(() => {
   onAuthStateChanged(auth, async (u) => {
     user.value = u || null;
-    await loadMine();  // refresh user's rating if already loaded
+    await loadMine();
   });
 });
 
@@ -130,6 +134,7 @@ const summary = computed(() => {
 async function save() {
   if (!user.value || !stars.value) return;
   saving.value = true;
+  saveMessage.value = "";
   try {
     await upsertUserRating(programId, {
       email: user.value.email,
@@ -138,6 +143,11 @@ async function save() {
     });
     await loadAllRatings();
     announce("Your rating was saved successfully.");
+    saveMessage.value = "Your rating has been saved!";
+     setTimeout(() => (saveMessage.value = ""), 4000); // hide after 4s
+  } catch (e) {
+    console.error(e);
+     saveMessage.value = " Failed to save rating. Try again.";
   } finally {
     saving.value = false;
   }

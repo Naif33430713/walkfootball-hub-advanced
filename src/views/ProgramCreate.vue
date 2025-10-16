@@ -17,7 +17,7 @@
 
     <form @submit.prevent="submit" aria-labelledby="add-title">
       <div class="row g-3">
-        <!-- Name -->
+
         <div class="col-md-8">
           <label class="form-label" for="name">Name *</label>
           <input
@@ -30,7 +30,7 @@
           />
         </div>
 
-        <!-- Difficulty -->
+
         <div class="col-md-4">
           <label class="form-label" for="difficulty">Difficulty</label>
           <select id="difficulty" v-model="form.difficulty" class="form-select">
@@ -40,7 +40,7 @@
           </select>
         </div>
 
-        <!-- Location -->
+
         <div class="col-md-6">
           <label class="form-label" for="location">Location *</label>
           <input
@@ -54,19 +54,32 @@
           />
         </div>
 
-        <!-- Address -->
-        <div class="col-md-6">
+
+        <div class="col-md-6 position-relative">
           <label class="form-label" for="address">Address (optional)</label>
           <input
             id="address"
-            v-model.trim="form.address"
+            v-model="addressQuery"
             type="text"
             class="form-control"
-            placeholder="123 Bourke St, Melbourne"
+            placeholder="Start typing address..."
+            @input="searchAddress"
           />
+
+
+          <ul v-if="suggestions.length" class="list-group position-absolute w-100" style="z-index: 1000;">
+            <li
+              v-for="s in suggestions"
+              :key="s.id"
+              @click="selectSuggestion(s)"
+              class="list-group-item list-group-item-action"
+            >
+              {{ s.place_name }}
+            </li>
+          </ul>
         </div>
 
-        <!-- Schedule -->
+
         <div class="col-12">
           <label class="form-label" for="schedule">Schedule *</label>
           <input
@@ -80,19 +93,19 @@
           />
         </div>
 
-        <!-- Cost -->
+
         <div class="col-md-6">
           <label class="form-label" for="cost">Cost (AUD)</label>
           <input id="cost" v-model.number="form.cost" type="number" min="0" class="form-control" />
         </div>
 
-        <!-- Instructor -->
+
         <div class="col-md-6">
           <label class="form-label" for="instructor">Instructor</label>
           <input id="instructor" v-model.trim="form.instructor" type="text" class="form-control" />
         </div>
 
-        <!-- Capacity -->
+
         <div class="col-md-6">
           <label class="form-label" for="max">Max Participants</label>
           <input id="max" v-model.number="form.maxParticipants" type="number" min="0" class="form-control" />
@@ -103,13 +116,12 @@
           <input id="current" v-model.number="form.currentParticipants" type="number" min="0" class="form-control" />
         </div>
 
-        <!-- Description -->
         <div class="col-12">
           <label class="form-label" for="description">Description</label>
           <textarea id="description" v-model.trim="form.description" rows="3" class="form-control"></textarea>
         </div>
 
-        <!-- Availability -->
+
         <div class="col-12">
           <div class="form-check">
             <input id="available" v-model="form.available" type="checkbox" class="form-check-input" />
@@ -117,7 +129,7 @@
           </div>
         </div>
 
-        <!-- Latitude / Longitude -->
+
         <div class="col-md-3">
           <label class="form-label" for="lat">Latitude</label>
           <input id="lat" v-model.number="form.lat" type="number" step="0.000001" class="form-control" />
@@ -127,7 +139,7 @@
           <input id="lng" v-model.number="form.lng" type="number" step="0.000001" class="form-control" />
         </div>
 
-        <!-- Actions -->
+
         <div class="col-12 d-flex gap-2 align-items-center">
           <button class="btn btn-primary" :disabled="saving" :aria-busy="saving">
             <span v-if="saving">{{ isEdit ? 'Updating…' : 'Saving…' }}</span>
@@ -140,7 +152,7 @@
             Geocoding…
           </span>
 
-          <!-- Delete (only in edit mode) -->
+
           <button
             v-if="isEdit"
             type="button"
@@ -191,6 +203,10 @@ const form = reactive({
   lng: null
 })
 
+
+const addressQuery = ref('')
+const suggestions = ref([])
+
 const saving = ref(false)
 const geocoding = ref(false)
 const status = ref('')
@@ -206,6 +222,28 @@ function basicValidate() {
   return true
 }
 
+
+async function searchAddress() {
+  const q = addressQuery.value.trim()
+  if (q.length < 3) {
+    suggestions.value = []
+    return
+  }
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json?autocomplete=true&limit=5&access_token=${MAPBOX_TOKEN}`
+  const res = await fetch(url)
+  const data = await res.json()
+  suggestions.value = data.features || []
+}
+
+function selectSuggestion(s) {
+  addressQuery.value = s.place_name
+  suggestions.value = []
+  form.address = s.place_name
+  const [lng, lat] = s.center
+  form.lat = lat
+  form.lng = lng
+}
+
 async function geocode(q) {
   if (!MAPBOX_TOKEN || !q) return null
   const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json?limit=1&access_token=${MAPBOX_TOKEN}`
@@ -218,7 +256,6 @@ async function geocode(q) {
   return { lat, lng }
 }
 
-// load existing when editing
 onMounted(async () => {
   if (!isEdit) return
   try {
@@ -228,8 +265,9 @@ onMounted(async () => {
       ok.value = false
       return
     }
-    Object.assign(form, existing) // shallow copy known fields
+    Object.assign(form, existing)
     createdId.value = id
+    addressQuery.value = form.address
   } catch (e) {
     status.value = 'Failed to load program.'
     ok.value = false
@@ -270,13 +308,13 @@ async function submit() {
       createdId.value = newId
       ok.value = true
       status.value = 'Program created.'
-      // clear a few inputs after create
       form.name = ''
       form.location = ''
       form.address = ''
       form.schedule = ''
       form.lat = null
       form.lng = null
+      addressQuery.value = ''
     }
   } catch (e) {
     ok.value = false
@@ -303,3 +341,8 @@ async function onDelete() {
   }
 }
 </script>
+
+<style scoped>
+.list-group-item { cursor: pointer; }
+.list-group-item:hover { background-color: #f0f0f0; }
+</style>

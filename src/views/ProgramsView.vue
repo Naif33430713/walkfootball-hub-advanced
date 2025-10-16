@@ -17,7 +17,6 @@
               <span class="small">{{ radiusKm }} km</span>
             </div>
 
-            <!-- Non-trivial: Place search -->
             <div class="d-flex align-items-center gap-2">
               <input
                 v-model.trim="searchQuery"
@@ -54,6 +53,11 @@
             </div>
           </div>
         </div>
+        <div v-if="message"
+        class="alert mt-3 mb-0"
+        :class="message.includes('⚠️') ? 'alert-danger' : 'alert-success'">
+          {{ message }}
+        </div>
       </div>
     </section>
 
@@ -73,7 +77,7 @@
       </div>
     </section>
 
-    <!-- ===== Loading / Error ===== -->
+
     <section class="py-3">
       <div class="container-xxl">
         <div v-if="loading" class="alert alert-info mb-0">Loading programs…</div>
@@ -81,7 +85,7 @@
       </div>
     </section>
 
-    <!-- ===== Programs Grid ===== -->
+
     <section class="py-4" v-if="!loading && !error">
       <div class="container-xxl">
         <div class="row">
@@ -140,6 +144,7 @@ const router = useRouter()
 const programs = ref([])
 const loading = ref(true)
 const error = ref('')
+const message = ref("")
 
 
 const level = ref('')
@@ -149,7 +154,7 @@ const uniqueLevels = computed(() => {
 })
 
 /* geo */
-const myPos = ref(null) // { lat, lng }
+const myPos = ref(null)
 const radiusKm = ref(10)
 const sortByDistance = ref(false)
 
@@ -166,6 +171,7 @@ const DEFAULT_ZOOM = 10
 
 const searchQuery = ref('')
 const searching = ref(false)
+
 
 
 function clearFilters() {
@@ -329,11 +335,14 @@ async function onBook(p) {
   const email = user.email || `${user.uid}@local`
   const displayName = user.displayName || user.email || user.uid
 
+
   try {
     await bookProgram(p.id, { email, displayName })
-    alert(`Booked: ${p.name}`)
+    message.value = `You booked ${p.name} successfully!`
+    setTimeout(() => (message.value = ""), 4000)
   } catch (e) {
-    alert(e?.message || 'Booking failed')
+    message.value = e?.message || ' Booking failed. Try again.'
+    setTimeout(() => (message.value = ""), 4000)
   }
 }
 

@@ -1,0 +1,174 @@
+:root {
+  --primary-green:#2d5a27;
+  --secondary-green:#4a7c59;
+  --light-green:#8fbc8f;
+  --accent-orange:#ff6b35;
+  --light-gray:#f8f9fa;
+  --dark-gray:#343a40;
+}
+
+/* ========== Global Base ========== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--dark-gray);
+}
+
+
+.text-primary { color: var(--primary-green) !important; }
+
+/* ========== Header ========== */
+.navbar-brand {
+  font-weight: bold;
+  color: var(--primary-green) !important;
+}
+.navbar { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+
+/* ========== Home Banner  ========== */
+.wf-banner { padding-block: clamp(2rem, 4vw + 1rem, 5.5rem); }
+.wf-banner h1 { font-size: clamp(2rem, 2.5vw + 1.25rem, 3.25rem); }
+.wf-banner p  { font-size: clamp(1rem, 1vw + 0.75rem, 1.25rem); }
+
+/*  buttons layout */
+.wf-banner .banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+@media (max-width: 575.98px) {
+  .wf-banner .banner-actions .btn { width: 100%; }
+}
+
+/* ========== Cards ====== */
+.program-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  height: 100%;
+}
+.program-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Bigger screens*/
+@media (min-width: 1400px) {
+  .program-card { box-shadow: 0 4px 18px rgba(0,0,0,0.14); }
+}
+
+/* Card header brand  */
+.card-header {
+  background: var(--light-green);
+  border-bottom: 2px solid var(--secondary-green);
+  font-weight: bold;
+  color: var(--dark-gray) !important;
+}
+
+/* ========== Buttons ========== */
+.btn-primary {
+  background-color: var(--primary-green);
+  border-color: var(--primary-green);
+}
+.btn-primary:hover {
+  background-color: var(--secondary-green);
+  border-color: var(--secondary-green);
+}
+
+
+.btn-accent {
+  background-color: var(--accent-orange);
+  border-color: var(--accent-orange);
+  color: #111 !important;
+}
+.btn-accent:hover {
+  background-color: #e55a2b;
+  border-color: #e55a2b;
+  color: #111 !important;
+}
+
+
+.badge-beginner {
+  background-color: #28a745 !important;
+  color: #000 !important;
+}
+.badge-intermediate {
+  background-color: #ffc107 !important;
+  color: #000 !important;
+}
+
+.badge-advanced {
+  background-color: #dc3545 !important;
+  color: #fff !important;
+}
+
+
+.form-control:focus {
+  border-color: var(--secondary-green);
+  box-shadow: 0 0 0 0.2rem rgba(77,124,89,0.25);
+}
+.form-label {
+  font-weight: 600;
+  color: var(--primary-green);
+}
+
+
+.filter-section {
+  background-color: var(--light-gray);
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+}
+@media (max-width: 575.98px) {
+  .filter-section { padding: 1.25rem 0; }
+}
+
+/* ========== Footer  ========== */
+.footer {
+  background-color: var(--primary-green);
+  color: #fff;
+  padding: 2rem 0;
+  margin-top: 4rem;
+}
+.footer .footer-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .footer .footer-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .footer .footer-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1400px) {
+  .footer .footer-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.footer a { color: #fff; text-decoration: none; }
+.footer a:hover { text-decoration: underline; }
+
+/* ========== Small-screen ========== */
+@media (max-width: 575.98px) {
+  .program-card { margin-bottom: 1rem; }
+}
+
+/* ========== Success State ========== */
+.alert-success {
+  border-color: var(--secondary-green);
+  background-color: rgba(77,124,89,0.1);
+  color: var(--primary-green);
+}
+
+/* ========== A11y helpers ========== */
+.visually-hidden {
+  position: absolute !important;
+  height: 1px; width: 1px;
+  overflow: hidden; clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap; border: 0; padding: 0; margin: -1px;
+}
+
+
+:focus-visible {
+  outline: 3px solid #0d6efd;
+  outline-offset: 2px;
+}

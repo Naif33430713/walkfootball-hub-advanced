@@ -1,9 +1,8 @@
 // src/services/db.js
-// Firestore helpers for Walking Football Hub
+// Firestore helpers
 // - Programs live list / one-time fetch
 // - Program CRUD
 // - Ratings subcollection with simple aggregate (avg + count)
-// - Bookings (transactional)
 
 import {
   collection,
@@ -14,7 +13,6 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  onSnapshot,
   query,
   orderBy,
   serverTimestamp,
@@ -32,7 +30,7 @@ function emailId(email) {
   return String(email || "").trim().toLowerCase();
 }
 
-// --- Util: shape + defaults (defensive against unexpected fields)
+
 function normalizeProgram(p = {}) {
   return {
     name: p.name || "",
@@ -73,7 +71,7 @@ function normalizeProgram(p = {}) {
  * Live subscription to programs
  * @param {(programs: Array) => void} onData
  * @param {(errMsg: string) => void} [onError]
- * @returns {() => void} unsubscribe
+ * @returns {() => void}
  */
 
 
@@ -187,7 +185,7 @@ export async function upsertRating(programId, rating) {
 }
 
 /**
- * Delete one user's rating and recompute aggregates
+ * Delete one user's rating , recompute aggregates
  * @param {string} programId
  * @param {string} email
  */
@@ -200,7 +198,7 @@ export async function deleteRating(programId, email) {
 }
 
 /**
- * Recompute ratingAvg + ratingCount for a program by reading all ratings.
+ * Recompute ratingAvg + ratingCount for a program
  * @param {string} programId
  */
 async function recomputeProgramRatings(programId) {
