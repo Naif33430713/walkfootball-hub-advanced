@@ -235,14 +235,29 @@ async function loadData() {
 }
 onMounted(loadData);
 
-/* Delete Program (row) */
+
 async function onDeleteRow(row) {
   if (!row?.id) return;
   if (!confirm(`Delete "${row.name}"? This cannot be undone.`)) return;
   deletingId.value = row.id;
   try {
+
     await deleteProgram(row.id);
-    await loadData(); // refresh tables
+
+
+    const BASE =
+      import.meta.env.VITE_FUNCTIONS_BASE_URL
+    await fetch(`${BASE}/archiveDeletedProgramHttp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        program: row,
+        adminEmail: email.value,
+      }),
+    });
+
+    console.log(`Program ${row.name} archived successfully`);
+    await loadData();
   } catch (e) {
     console.error("Delete failed:", e);
     alert("Failed to delete. Try again.");
@@ -387,7 +402,7 @@ function exportRatingsPdf() {
   doc.save("ratings.pdf");
 }
 
-/* ---------------- Derived table data ---------------- */
+/* ----------------  table data ---------------- */
 const programRowsForTable = computed(() =>
   programs.value.map((p) => {
     const s = ratingSummary[p.id] || { avg: 0, count: 0 };

@@ -382,3 +382,40 @@ export const apiStatsLite = onRequest(
     }
   }
 );
+/* =========================
+   Cloud Function: Archive Deleted Program
+========================= */
+export const archiveDeletedProgramHttp = onRequest(
+  { region: "us-central1", timeoutSeconds: 60 },
+  async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    if (req.method === "OPTIONS") return res.status(204).send("");
+
+    try {
+      const { program, adminEmail } = req.body;
+      if (!program || !program.id) {
+        return res.status(400).json({ ok: false, error: "Missing program data" });
+      }
+
+      const archiveData = {
+        name: program.name || "",
+        location: program.location || "",
+        schedule: program.schedule || "",
+        difficulty: program.difficulty || "",
+        instructor: program.instructor || "",
+        deletedBy: adminEmail || "unknown",
+        deletedAt: new Date(),
+      };
+
+      await db.collection("deletedPrograms").doc(program.id).set(archiveData);
+
+      console.log(`Archived deleted program: ${program.name}`);
+      return res.json({ ok: true, message: "Program archived successfully" });
+    } catch (e) {
+      console.error("archiveDeletedProgramHttp error:", e);
+      return res.status(500).json({ ok: false, error: e?.message || String(e) });
+    }
+  }
+);
