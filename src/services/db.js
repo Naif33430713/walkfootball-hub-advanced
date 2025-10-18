@@ -1,8 +1,5 @@
-// src/services/db.js
-// Firestore helpers
-// - Programs live list / one-time fetch
-// - Program CRUD
-// - Ratings subcollection with simple aggregate (avg + count)
+
+
 
 import {
   collection,
@@ -22,7 +19,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase";
 
-// --- Collection refs
+// --- Collection
 const colPrograms = collection(db, "programs");
 
 // --- Utils
@@ -59,50 +56,25 @@ function normalizeProgram(p = {}) {
     ratingAvg: Number(p.ratingAvg ?? 0),
     ratingCount: Number(p.ratingCount ?? 0),
 
-    // Timestamps (created on server)
+    // Timestamps
     createdAt: p.createdAt || serverTimestamp(),
     updatedAt: serverTimestamp(),
   };
 }
 
 
-
-/**
- * Live subscription to programs
- * @param {(programs: Array) => void} onData
- * @param {(errMsg: string) => void} [onError]
- * @returns {() => void}
- */
-
-
-/**
- * One-time fetch of programs
- * @returns {Promise<Array>}
- */
 export async function listPrograms() {
   const q = query(colPrograms, orderBy("name"));
   const snap = await getDocs(q);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-
-
-/**
- * Create a program
- * @param {Object} data
- * @returns {Promise<string>}
- */
 export async function addProgram(data) {
   const payload = normalizeProgram(data);
   const ref = await addDoc(colPrograms, payload);
   return ref.id;
 }
 
-/**
- * Get a single program
- * @param {string} id
- * @returns {Promise<Object|null>}
- */
 export async function getProgram(id) {
   const ref = doc(db, "programs", id);
   const snap = await getDoc(ref);
@@ -110,57 +82,32 @@ export async function getProgram(id) {
   return { id: snap.id, ...snap.data() };
 }
 
-/**
- * Live subscription to a single program
- * @param {string} id
- * @param {(p: Object|null)=>void} onData
- * @param {(errMsg: string)=>void} [onError]
- * @returns {() => void}
- */
 
-
-/**
- *
- * @param {string} id
- * @param {Object} patch
- */
 export async function updateProgram(id, patch) {
   const ref = doc(db, "programs", id);
   const safe = { ...patch, updatedAt: serverTimestamp() };
   await updateDoc(ref, safe);
 }
 
-/**
- * Delete a program
- * @param {string} id
- */
+
 export async function deleteProgram(id) {
   const ref = doc(db, "programs", id);
   await deleteDoc(ref);
 }
 
-// --- Ratings subcollection
+
 
 function ratingsCol(programId) {
   return collection(db, "programs", programId, "ratings");
 }
 
-/**
- * List ratings for a program
- * @param {string} programId
- * @returns {Promise<Array<{email:string,stars:number,comment?:string}>>}
- */
+
 export async function listRatings(programId) {
   const col = ratingsCol(programId);
   const snap = await getDocs(col);
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-/**
- *
- * @param {string} programId
- * @param {{email:string, stars:number, comment?:string}} rating
- */
 export async function upsertRating(programId, rating) {
   const email = String(rating.email || "").trim().toLowerCase();
   if (!email) throw new Error("Missing email for rating.");
@@ -180,15 +127,11 @@ export async function upsertRating(programId, rating) {
     { merge: true }
   );
 
-  // Recompute aggregates (simple)
+
   await recomputeProgramRatings(programId);
 }
 
-/**
- * Delete one user's rating , recompute aggregates
- * @param {string} programId
- * @param {string} email
- */
+
 export async function deleteRating(programId, email) {
   const id = String(email || "").trim().toLowerCase();
   if (!id) return;
@@ -197,10 +140,7 @@ export async function deleteRating(programId, email) {
   await recomputeProgramRatings(programId);
 }
 
-/**
- * Recompute ratingAvg + ratingCount for a program
- * @param {string} programId
- */
+
 async function recomputeProgramRatings(programId) {
   const all = await listRatings(programId);
   const count = all.length;
@@ -209,9 +149,7 @@ async function recomputeProgramRatings(programId) {
   await updateProgram(programId, { ratingAvg: avg, ratingCount: count });
 }
 
-/**
- * List all ratings across all programs (flat shape)
- */
+
 export async function listAllRatingsFlat() {
   const snap = await getDocs(collectionGroup(db, "ratings"));
   return snap.docs.map((d) => {

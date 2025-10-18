@@ -140,7 +140,7 @@ mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
 
 const router = useRouter()
 
-/* ----- State ----- */
+
 const programs = ref([])
 const loading = ref(true)
 const error = ref('')
@@ -153,12 +153,12 @@ const uniqueLevels = computed(() => {
   return Array.from(set).sort()
 })
 
-/* geo */
+
 const myPos = ref(null)
 const radiusKm = ref(10)
 const sortByDistance = ref(false)
 
-/* map */
+
 const mapEl = ref(null)
 let map = null
 let programMarkers = []
@@ -222,7 +222,7 @@ const filteredPrograms = computed(() => {
   return list
 })
 
-/* ----- Map ----- */
+
 function initMap() {
   if (map) return
   map = new mapboxgl.Map({
@@ -274,7 +274,7 @@ function flyToMyPos() {
   map.flyTo({ center: [myPos.value.lng, myPos.value.lat], zoom: 12 })
 }
 
-/* ----- Geolocation ----- */
+
 async function setMyLocation() {
   try {
     const coords = await new Promise((resolve, reject) =>
@@ -292,7 +292,7 @@ async function setMyLocation() {
   }
 }
 
-/* ----- Place search ----- */
+
 async function searchPlace() {
   const q = (searchQuery.value || '').trim()
   if (!q || !map) return

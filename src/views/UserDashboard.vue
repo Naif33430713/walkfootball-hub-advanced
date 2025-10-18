@@ -1,4 +1,4 @@
-<!-- src/views/UserDashboard.vue -->
+
 <template>
   <div class="container my-5">
     <h2>User Dashboard</h2>

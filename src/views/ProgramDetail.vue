@@ -5,7 +5,6 @@
       {{ program.location }} • {{ program.schedule }} • {{ program.difficulty }}
     </p>
 
-    <!-- average rating -->
     <div class="mb-3">
       <StarRating :model-value="Math.round(summary.avg)" readonly />
       <span class="ms-2">{{ summary.count }} ratings</span>
@@ -13,7 +12,6 @@
 
     <p>{{ program.description }}</p>
 
-    <!-- form to rate -->
     <div v-if="user" class="card my-3">
       <div class="card-body">
         <h5>Your rating</h5>
@@ -36,7 +34,7 @@
       Please sign in to rate.
     </div>
 
-    <!-- list ratings -->
+
     <h5>Ratings</h5>
     <div v-if="ratings.length === 0">No ratings yet</div>
     <ul v-else class="list-group">
@@ -64,7 +62,7 @@ import StarRating from "@/components/StarRating.vue";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 
-// Firestore helpers
+
 import {
   listPrograms,
   listRatingsForProgram,
@@ -73,7 +71,7 @@ import {
 } from "@/services/db";
 import { announce, focusMain } from "@/utils/a11y";
 
-// route & ids
+
 const route = useRoute();
 const programId = String(route.params.id || "");
 
@@ -124,7 +122,7 @@ async function loadMine() {
   comment.value = mine?.comment || "";
 }
 
-// summary (avg + count)
+
 const summary = computed(() => {
   const count = ratings.value.length;
   const sum = ratings.value.reduce((a, r) => a + Number(r.stars || 0), 0);

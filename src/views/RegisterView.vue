@@ -1,4 +1,4 @@
-<!-- src/views/RegisterView.vue -->
+
 <template>
   <div class="register">
     <section class="py-5 bg-light">
@@ -17,7 +17,7 @@
 
           <div class="card-body">
             <form @submit.prevent="handleRegister" novalidate>
-              <!-- Username -->
+
               <div class="mb-3">
                 <label for="username" class="form-label">Username *</label>
                 <input
@@ -33,7 +33,7 @@
                 <div v-if="errors.username" class="invalid-feedback">{{ errors.username }}</div>
               </div>
 
-              <!-- Email -->
+
               <div class="mb-3">
                 <label for="email" class="form-label">Email *</label>
                 <input
@@ -49,7 +49,7 @@
                 <div v-if="errors.email" class="invalid-feedback">{{ errors.email }}</div>
               </div>
 
-              <!-- Password -->
+
               <div class="mb-3">
                 <label for="password" class="form-label">Password *</label>
                 <input
@@ -65,7 +65,7 @@
                 <div v-if="errors.password" class="invalid-feedback">{{ errors.password }}</div>
               </div>
 
-              <!-- Age -->
+
               <div class="mb-3">
                 <label for="age" class="form-label">Age *</label>
                 <input
@@ -82,7 +82,7 @@
                 <div v-if="errors.age" class="invalid-feedback">{{ errors.age }}</div>
               </div>
 
-              <!-- Phone -->
+
               <div class="mb-3">
                 <label for="phone" class="form-label">Phone *</label>
                 <input
@@ -98,7 +98,7 @@
                 <div v-if="errors.phone" class="invalid-feedback">{{ errors.phone }}</div>
               </div>
 
-              <!-- Terms -->
+
               <div class="form-check mb-3">
                 <input
                   id="terms"
@@ -122,7 +122,7 @@
               </div>
             </form>
 
-            <!-- Simple feedback -->
+
             <div v-if="success" class="alert alert-success mt-3" role="status">
               Account created for <strong>{{ createdEmail }}</strong>.
             </div>

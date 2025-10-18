@@ -1,4 +1,4 @@
-<!-- src/views/FirebaseSigninView.vue -->
+
 <template>
   <div class="container my-5" style="max-width: 420px">
     <h2 id="signin-title" class="mb-4 text-center">Sign in to Walking Football</h2>
@@ -8,7 +8,7 @@
       novalidate
       aria-labelledby="signin-title"
     >
-      <!-- Email -->
+
       <div class="mb-3">
         <label for="email" class="form-label">Email *</label>
         <input
@@ -23,7 +23,7 @@
         />
       </div>
 
-      <!-- Password -->
+
       <div class="mb-3">
         <label for="password" class="form-label">Password *</label>
         <input
@@ -38,8 +38,6 @@
         />
         <div id="pwd-help" class="form-text">Minimum 8 characters.</div>
       </div>
-
-      <!-- Error -->
       <div
         v-if="errorMsg"
         class="alert alert-danger"
@@ -49,7 +47,7 @@
         {{ errorMsg }}
       </div>
 
-      <!-- Actions -->
+
       <button
         type="submit"
         class="btn btn-primary w-100"

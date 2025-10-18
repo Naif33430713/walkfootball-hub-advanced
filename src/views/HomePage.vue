@@ -1,6 +1,6 @@
   <template>
     <div class="home">
-      <!-- wf-banner Section -->
+
       <section class="wf-banner">
         <div class="container">
           <div class="row">
@@ -23,7 +23,7 @@
         </div>
       </section>
 
-      <!-- Features Section -->
+
       <section class="py-5">
         <div class="container-xxl">
           <div class="row text-center mb-5">

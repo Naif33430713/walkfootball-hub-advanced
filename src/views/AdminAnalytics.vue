@@ -1,4 +1,4 @@
-<!-- src/views/AdminAnalytics.vue -->
+
 <template>
   <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -18,7 +18,7 @@
     </div>
 
     <div class="row g-4">
-      <!-- Programs by Location -->
+
       <div class="col-12 col-lg-6">
         <div class="card h-100">
           <div class="card-header"><strong>Programs by Location</strong></div>
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <!-- Ratings Distribution -->
+
       <div class="col-12 col-lg-6">
         <div class="card h-100">
           <div class="card-header"><strong>Ratings Distribution</strong></div>
@@ -179,7 +179,7 @@ async function fetchData() {
     programsAll.value = p || []
     ratingsAll.value = r || []
 
-    // ---- build data for charts
+
     const counts = {}
     for (const prog of programsAll.value) {
       const k = (prog.location || 'Unspecified').trim()

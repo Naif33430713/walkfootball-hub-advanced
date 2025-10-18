@@ -1,4 +1,4 @@
-<!-- src/views/ProgramCreate.vue -->
+
 <template>
   <div class="container my-5" style="max-width: 760px">
     <h2 id="add-title" class="mb-3">{{ isEdit ? 'Edit Program' : 'Add Program' }}</h2>

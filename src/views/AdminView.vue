@@ -1,4 +1,4 @@
-<!-- src/views/AdminView.vue -->
+
 <template>
   <div class="container my-5">
     <div class="d-flex justify-content-end mb-3">
@@ -12,7 +12,6 @@
     </p>
     <hr />
 
-    <!-- ========== KPI DASHBOARD ========== -->
     <div class="row g-3 mb-4">
       <div class="col-6 col-md-3" v-for="card in kpiCards" :key="card.label">
         <div class="card h-100 text-center">
@@ -25,7 +24,7 @@
       </div>
     </div>
 
-    <!-- ========== PROGRAMS TABLE ========== -->
+
     <div class="card mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>All Programs</strong>
@@ -195,7 +194,7 @@ import Column from "primevue/column";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-/* ---------------- Auth ---------------- */
+
 const user = ref(null);
 const authReady = ref(false);
 onMounted(() =>
@@ -206,7 +205,7 @@ onMounted(() =>
 );
 const email = computed(() => user.value?.email || "");
 
-/* ---------------- Data ---------------- */
+
 const programs = ref([]);
 const ratingRows = ref([]);
 const ratingSummary = reactive({});
@@ -266,7 +265,7 @@ async function onDeleteRow(row) {
   }
 }
 
-/* ---------------- KPI ---------------- */
+
 const kpiCards = computed(() => {
   const totalPrograms = programs.value.length;
   const totalRatings = ratingRows.value.length;
@@ -283,7 +282,7 @@ const kpiCards = computed(() => {
   ];
 });
 
-/* ---------------- Filters ---------------- */
+
 const difficultyOptions = ["Beginner", "Intermediate", "Advanced"];
 const uniqueLocations = computed(() => {
   const set = new Set(
@@ -307,7 +306,7 @@ const ratingFilters = reactive({
   comment: { value: null, matchMode: "contains" },
 });
 
-/* ---------------- CSV/PDF Export ---------------- */
+
 function toCsv(columns, rows) {
   const esc = (v) => (v == null ? "" : `"${String(v).replace(/"/g, '""')}"`);
   const header = columns.map((c) => esc(c.label)).join(",");
@@ -402,7 +401,7 @@ function exportRatingsPdf() {
   doc.save("ratings.pdf");
 }
 
-/* ----------------  table data ---------------- */
+
 const programRowsForTable = computed(() =>
   programs.value.map((p) => {
     const s = ratingSummary[p.id] || { avg: 0, count: 0 };
